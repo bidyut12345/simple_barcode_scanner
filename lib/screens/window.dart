@@ -5,7 +5,7 @@ import 'package:simple_barcode_scanner/enum.dart';
 import 'package:webview_windows/webview_windows.dart';
 import 'package:path/path.dart' as p;
 
-class WindowBarcodeScanner extends StatelessWidget {
+class WindowBarcodeScanner extends StatefulWidget {
   final String lineColor;
   final String cancelButtonText;
   final bool isShowFlashIcon;
