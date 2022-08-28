@@ -119,6 +119,7 @@ class WindowBarcodeScanner extends StatelessWidget {
               barcodeNumber == null) {
             barcodeNumber = event['data'];
             await wc.stop();
+            await wc.dispose();
             onScanned(barcodeNumber!);
           }
         }
