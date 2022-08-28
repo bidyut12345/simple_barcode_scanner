@@ -112,12 +112,13 @@ class WindowBarcodeScanner extends StatelessWidget {
           .loadUrl(getAssetFileUrl(asset: PackageConstant.barcodeFilePath));
 
       /// Listen to web to receive barcode
-      controller.webMessage.listen((event) {
+      controller.webMessage.listen((event) async {
         if (event['methodName'] == "successCallback") {
           if (event['data'] is String &&
               event['data'].isNotEmpty &&
               barcodeNumber == null) {
             barcodeNumber = event['data'];
+            await wc.stop();
             onScanned(barcodeNumber!);
           }
         }
