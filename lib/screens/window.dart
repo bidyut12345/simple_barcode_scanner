@@ -22,6 +22,11 @@ class WindowBarcodeScanner extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<WindowBarcodeScanner> createState() => _WindowBarcodeScannerState();
+}
+
+class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
+  @override
   Widget build(BuildContext context) {
     WebviewController controller = WebviewController();
     bool isPermissionGranted = false;
@@ -118,9 +123,9 @@ class WindowBarcodeScanner extends StatelessWidget {
               event['data'].isNotEmpty &&
               barcodeNumber == null) {
             barcodeNumber = event['data'];
-            await wc.stop();
-            await wc.dispose();
-            onScanned(barcodeNumber!);
+            await controller.stop();
+            await controller.dispose();
+            widget.onScanned(barcodeNumber!);
           }
         }
       });
@@ -128,5 +133,17 @@ class WindowBarcodeScanner extends StatelessWidget {
       rethrow;
     }
     return true;
+  }
+  @override
+  void dispose() {
+    try
+    {
+      await controller.stop();
+      await controller.dispose();
+    }catch(_)
+    {}
+
+    // TODO: implement dispose
+    super.dispose();
   }
 }
