@@ -24,7 +24,7 @@
          const html5QrCode = new Html5Qrcode("reader");
          console.log("Starting SCANNGING CODE");
          const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-             /* html5QrCode.stop(); */
+             html5QrCode.stop();
              /* handle success for web */
              window.parent.postMessage(decodedText, "*");
 
