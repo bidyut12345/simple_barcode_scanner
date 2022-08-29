@@ -64,6 +64,7 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
       required BuildContext context,
       required bool isPermissionGranted}) async {
     final WebviewPermissionDecision? decision;
+    isPermissionGranted = true;
     if (!isPermissionGranted) {
       decision = await showDialog<WebviewPermissionDecision>(
         context: context,
