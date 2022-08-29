@@ -64,36 +64,36 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
       required BuildContext context,
       required bool isPermissionGranted}) async {
     final WebviewPermissionDecision? decision;
-    isPermissionGranted = true;
-    if (!isPermissionGranted) {
-      decision = await showDialog<WebviewPermissionDecision>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Permission requested'),
-          content: Text('\'${kind.name}\' permission is require to scan qr/barcode'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, WebviewPermissionDecision.deny);
-                isPermissionGranted = false;
-              },
-              child: const Text('Deny'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, WebviewPermissionDecision.allow);
-                isPermissionGranted = true;
-              },
-              child: const Text('Allow'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      decision = WebviewPermissionDecision.allow;
-    }
+    // if (!isPermissionGranted) {
+    //   decision = await showDialog<WebviewPermissionDecision>(
+    //     context: context,
+    //     builder: (BuildContext context) => AlertDialog(
+    //       title: const Text('Permission requested'),
+    //       content: Text('\'${kind.name}\' permission is require to scan qr/barcode'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.pop(context, WebviewPermissionDecision.deny);
+    //             isPermissionGranted = false;
+    //           },
+    //           child: const Text('Deny'),
+    //         ),
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.pop(context, WebviewPermissionDecision.allow);
+    //             isPermissionGranted = true;
+    //           },
+    //           child: const Text('Allow'),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // } else {
+    //   decision = WebviewPermissionDecision.allow;
+    // }
 
-    return decision ?? WebviewPermissionDecision.none;
+    // return decision ?? WebviewPermissionDecision.none;
+    return WebviewPermissionDecision.allow;
   }
 
   String getAssetFileUrl({required String asset}) {
