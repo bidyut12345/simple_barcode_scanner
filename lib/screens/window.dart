@@ -26,10 +26,10 @@ class WindowBarcodeScanner extends StatefulWidget {
 }
 
 class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
+  WebviewController controller = WebviewController();
+  bool isPermissionGranted = false;
   @override
   Widget build(BuildContext context) {
-    WebviewController controller = WebviewController();
-    bool isPermissionGranted = false;
     return Scaffold(
       appBar: AppBar(
         title: Text(kScanPageTitle),
@@ -42,13 +42,8 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
             if (snapshot.hasData && snapshot.data != null) {
               return Webview(
                 controller,
-                permissionRequested: (url, permissionKind, isUserInitiated) =>
-                    _onPermissionRequested(
-                        url: url,
-                        kind: permissionKind,
-                        isUserInitiated: isUserInitiated,
-                        context: context,
-                        isPermissionGranted: isPermissionGranted),
+                permissionRequested: (url, permissionKind, isUserInitiated) => _onPermissionRequested(
+                    url: url, kind: permissionKind, isUserInitiated: isUserInitiated, context: context, isPermissionGranted: isPermissionGranted),
               );
             } else if (snapshot.hasError) {
               return Center(
@@ -74,8 +69,7 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: const Text('Permission requested'),
-          content:
-              Text('\'${kind.name}\' permission is require to scan qr/barcode'),
+          content: Text('\'${kind.name}\' permission is require to scan qr/barcode'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -102,29 +96,22 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
   }
 
   String getAssetFileUrl({required String asset}) {
-    final assetsDirectory = p.join(p.dirname(Platform.resolvedExecutable),
-        'data', 'flutter_assets', asset);
+    final assetsDirectory = p.join(p.dirname(Platform.resolvedExecutable), 'data', 'flutter_assets', asset);
     return Uri.file(assetsDirectory).toString();
   }
 
-  Future<bool> initPlatformState(
-      {required WebviewController controller}) async {
+  Future<bool> initPlatformState({required WebviewController controller}) async {
     String? barcodeNumber;
 
     try {
       await controller.initialize();
-      await controller
-          .loadUrl(getAssetFileUrl(asset: PackageConstant.barcodeFilePath));
+      await controller.loadUrl(getAssetFileUrl(asset: PackageConstant.barcodeFilePath));
 
       /// Listen to web to receive barcode
       controller.webMessage.listen((event) async {
         if (event['methodName'] == "successCallback") {
-          if (event['data'] is String &&
-              event['data'].isNotEmpty &&
-              barcodeNumber == null) {
+          if (event['data'] is String && event['data'].isNotEmpty && barcodeNumber == null) {
             barcodeNumber = event['data'];
-            await controller.stop();
-            await controller.dispose();
             widget.onScanned(barcodeNumber!);
           }
         }
@@ -134,14 +121,13 @@ class _WindowBarcodeScannerState extends State<WindowBarcodeScanner> {
     }
     return true;
   }
+
   @override
   void dispose() {
-    try
-    {
-      await controller.stop();
-      await controller.dispose();
-    }catch(_)
-    {}
+    try {
+      controller.stop();
+      controller.dispose();
+    } catch (_) {}
 
     // TODO: implement dispose
     super.dispose();
